@@ -3,6 +3,7 @@ package com.example.lab_ads;
 import com.example.lab_ads.executors.ArrayLabExecutor;
 import com.example.lab_ads.executors.Lab1Executor;
 import com.example.lab_ads.executors.Lab2Executor;
+import com.example.lab_ads.executors.Lab3Executor;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -34,7 +35,7 @@ public class SortingAppController {
     private int arraySize = 0;
 
     public void initialize() {
-        String[] algorithms = {"lab 1: Selection Sort", "lab 2: Shell Sort", "lab 3", "lab 4", "lab 5"};
+        String[] algorithms = {"lab 1: Selection Sort", "lab 2: Shell Sort", "lab 3: Quicksort", "lab 4", "lab 5"};
         choiceBox.getItems().addAll(algorithms);
         choiceBox.setValue(algorithms[0]);
 
@@ -51,7 +52,7 @@ public class SortingAppController {
                 if (isArraySizeValid(arraySize)) {
                     getChoice(choiceBox);
                 } else {
-                    originalArrayText.setText("Invalid size of array! Try again");
+                    originalArrayText.setText("Invalid dimension! Try again");
                 }
             });
 
@@ -75,17 +76,18 @@ public class SortingAppController {
                 ArrayLabExecutor<String> executor2 = new Lab2Executor(originalArrayText, updatedArrayText, sortedArrayText, timeElapsedText, isSortedArrayText, outputTextArea);
                 executor2.doThingsWithArray(arraySize);
                 break;
-            case "lab 3":
+            case "lab 3: Quicksort":
                 clearText();
-                originalArrayText.setText("Lab 3 haven`t created yet :(");
+                Lab3Executor executor3 = new Lab3Executor(originalArrayText, updatedArrayText, sortedArrayText, timeElapsedText, isSortedArrayText, outputTextArea);
+                executor3.doThingsWithArray(arraySize);
                 break;
             case "lab 4":
                 clearText();
-                originalArrayText.setText("Lab 3 haven`t created yet :(");
+                originalArrayText.setText("Lab 4 haven`t created yet :(");
                 break;
             case "lab 5":
                 clearText();
-                originalArrayText.setText("Lab 3 haven`t created yet :(");
+                originalArrayText.setText("Lab 5 haven`t created yet :(");
                 break;
         }
     }

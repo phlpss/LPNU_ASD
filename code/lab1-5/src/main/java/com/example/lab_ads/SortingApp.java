@@ -28,8 +28,9 @@ public class SortingApp extends Application {
         Image icon = new Image("Vector.png");
         stage.getIcons().add(icon);
 
-        Image image = new Image("kitty.png"); // Load the image
-        ImageView kitty = new ImageView(image); // Create an ImageView
+        // todo add kitty
+        Image image = new Image("kitty.png");
+        ImageView kitty = new ImageView(image);
 
         stage.setScene(scene);
         stage.setTitle("Sorting Array Application");

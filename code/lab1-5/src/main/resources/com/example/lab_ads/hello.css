@@ -1,0 +1,51 @@
+ScrollPane .viewport {
+    -fx-background-color: #292929;
+}
+VBox > Text {
+    -fx-font-family: Niramit;
+    -fx-font-size: 20px;
+    -fx-fill: WHITESMOKE;
+    -fx-translate-x: 50px;
+    -fx-translate-y: 25px;
+}
+
+TextField {
+    -fx-min-width: 100px;
+    -fx-min-height: 35px;
+
+    -fx-font-size: 16px;
+    -fx-text-fill: WHITESMOKE;
+    -fx-background-color: #383838;
+}
+
+Button {
+    -fx-min-width: 165px;
+    -fx-min-height: 35px;
+
+    -fx-font-size: 16px;
+    -fx-text-fill: WHITESMOKE;
+    -fx-background-color: #9747FF;
+}
+
+ChoiceBox {
+    -fx-min-width: 140px;
+    -fx-min-height: 35px;
+
+    -fx-font-size: 16px;
+    -fx-text-fill: WHITESMOKE;
+    -fx-background-color: #383838;
+}
+#choiceBox .label {
+    -fx-text-fill: WHITESMOKE;
+}
+#output .content {
+    -fx-min-width: 1040px;
+    -fx-background-color: #383838;
+}
+#output .text-area {
+    -fx-font-size: 14px;
+    -fx-text-fill: WHITESMOKE;
+}
+
+
+

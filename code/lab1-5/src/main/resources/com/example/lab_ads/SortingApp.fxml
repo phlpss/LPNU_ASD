@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+
+<ScrollPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab_ads.SortingAppController">
+    <VBox>
+        <Text fx:id="text" text="Put down the number of elements in the array:"/>
+
+        <HBox spacing="20" translateX="50" translateY="50">
+            <TextField fx:id="numberInput" />
+            <ChoiceBox fx:id="choiceBox"/>
+            <Button fx:id="button" text="Generate and Sort"/>
+        </HBox>
+
+        <VBox translateY="100">
+            <Text fx:id="originalArrayText"/>
+            <Text fx:id="updatedArrayText"/>
+            <Text fx:id="sortedArrayText"/>
+            <Text fx:id="isSortedArrayText"/>
+            <Text fx:id="timeElapsedText"/>
+        </VBox>
+
+        <VBox translateX="50" translateY="130" fx:id="output">
+            <TextArea fx:id="outputTextArea" />
+        </VBox>
+
+        <ImageView fx:id="kitty" fitWidth="100" fitHeight="100" translateX="800" translateY="500"/>
+    </VBox>
+</ScrollPane>

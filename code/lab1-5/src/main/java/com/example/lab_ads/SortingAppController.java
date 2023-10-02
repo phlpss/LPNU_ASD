@@ -1,9 +1,6 @@
 package com.example.lab_ads;
 
-import com.example.lab_ads.executors.ArrayLabExecutor;
-import com.example.lab_ads.executors.Lab1Executor;
-import com.example.lab_ads.executors.Lab2Executor;
-import com.example.lab_ads.executors.Lab3Executor;
+import com.example.lab_ads.executors.*;
 import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -35,7 +32,7 @@ public class SortingAppController {
     private int arraySize = 0;
 
     public void initialize() {
-        String[] algorithms = {"lab 1: Selection Sort", "lab 2: Shell Sort", "lab 3: Quicksort", "lab 4", "lab 5"};
+        String[] algorithms = {"lab 1: Selection Sort", "lab 2: Shell Sort", "lab 3: Quicksort", "lab 4: Merge Sort", "lab 5"};
         choiceBox.getItems().addAll(algorithms);
         choiceBox.setValue(algorithms[0]);
 
@@ -81,9 +78,10 @@ public class SortingAppController {
                 Lab3Executor executor3 = new Lab3Executor(originalArrayText, updatedArrayText, sortedArrayText, timeElapsedText, isSortedArrayText, outputTextArea);
                 executor3.doThingsWithArray(arraySize);
                 break;
-            case "lab 4":
+            case "lab 4: Merge Sort":
                 clearText();
-                originalArrayText.setText("Lab 4 haven`t created yet :(");
+                ArrayLabExecutor<Double> executor4 = new Lab4Executor(originalArrayText, updatedArrayText, sortedArrayText, timeElapsedText, isSortedArrayText, outputTextArea);
+                executor4.doThingsWithArray(arraySize);
                 break;
             case "lab 5":
                 clearText();

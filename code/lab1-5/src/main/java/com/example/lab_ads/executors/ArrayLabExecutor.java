@@ -25,16 +25,16 @@ public abstract class ArrayLabExecutor<T> {
 
     public void doThingsWithArray(int size) {
         list = generateList(size);
-        originalArrayText.setText("Original Array:\t\t" + Arrays.toString(new List[]{list}));
+        originalArrayText.setText("Original Array:\t\t" + Arrays.toString((new List[]{list})));
 
         List<T> updatedArray = updateList();
         updatedArrayText.setText("Updated Array:\t" + Arrays.toString(new List[]{updatedArray}));
 
         long start = System.currentTimeMillis();
-        List<T> sortedArray = sortList();
+        List<T> sortedArray = sortList(list);
         long end = System.currentTimeMillis();
 
-        if (isSorted(list)) {
+        if (isSorted(sortedArray)) {
             isSortedArrayText.setText(sortedArrayText.getText() + "\n\nCorrectly Sorted :)");
         } else {
             isSortedArrayText.setText(sortedArrayText.getText() + "\n\nIncorrectly Sorted :(");
@@ -46,6 +46,6 @@ public abstract class ArrayLabExecutor<T> {
 
     protected abstract List<T> generateList(int size);
     protected abstract List<T> updateList();
-    protected abstract List<T> sortList();
+    protected abstract List<T> sortList(List<T> inputArray);
     protected abstract boolean isSorted(List<T> array);
 }

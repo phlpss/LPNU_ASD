@@ -8,7 +8,7 @@
 
 <ScrollPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.lab_ads.SortingAppController">
     <VBox>
-        <Text fx:id="text" text="Put down the dimension of square matrix:"/>
+        <Text fx:id="text" text="Put down the dimension of array or square matrix:"/>
 
         <HBox spacing="20" translateX="50" translateY="50">
             <TextField fx:id="numberInput" />

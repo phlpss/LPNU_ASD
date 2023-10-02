@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -23,8 +24,10 @@ public class Lab3Executor {
     Text isSortedArrayText;
     Text timeElapsedText;
     TextArea outputTextArea;
+
     @NonFinal
     List<List<Double>> matrix = new ArrayList<>();
+    private static final DecimalFormat df = new DecimalFormat("#.##");
 
     /**
      * Generate a random matrix of the given size and perform sorting and display operations.
@@ -55,12 +58,15 @@ public class Lab3Executor {
 
     protected List<List<Double>> generateMatrix(int size) {
         Random random = new Random();
+        double randomValue, roundedValue;
 
         for (int i = 0; i < size; i++) {
             // generate each of row
             List<Double> row = new ArrayList<>();
             for (int j = 0; j < size; j++) {
-                row.add(random.nextDouble(10) + 1);
+                randomValue = random.nextDouble(10) + 1;
+                roundedValue = Double.parseDouble(df.format(randomValue));
+                row.add(roundedValue);
             }
             matrix.add(row);
         }
@@ -73,7 +79,7 @@ public class Lab3Executor {
         for (Double i : row) {
             sum += i;
         }
-        return sum;
+        return Double.parseDouble(df.format(sum));
     }
 
     protected List<List<Double>> sortMatrix(List<List<Double>> inputMatrix) {
@@ -122,7 +128,8 @@ public class Lab3Executor {
         for (List<Double> row : inputMatrix) {
             outputText.append("| ");
             for (Double value : row) {
-                outputText.append(String.format("%.2f", value));
+//                outputText.append(String.format("%.2f", value));
+                outputText.append(value);
                 outputText.append("    ");
             }
             outputText.append("\n");
@@ -148,10 +155,9 @@ public class Lab3Executor {
         for (List<Double> row : inputMatrix) {
             matrixText.append("| ");
             for (Double value : row) {
-                matrixText.append(String.format("%.2f", value));
-                matrixText.append("    ");
+                matrixText.append(value).append("    ");
             }
-            matrixText.append("\n");
+            matrixText.append("\t= ").append(calculateSumOfRow(row)).append("\n");
         }
 
         text.setText(matrixText.toString());

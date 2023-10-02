@@ -39,23 +39,23 @@ public class Lab1Executor extends ArrayLabExecutor<Integer>{
     }
 
     @Override
-    protected List<Integer> sortList() {
+    protected List<Integer> sortList(List<Integer> inputArray) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < array.size() - 1; i++) {
+        for (int i = 0; i < inputArray.size() - 1; i++) {
             int minIndex = i;
             // get min index
-            for (int j = i + 1; j < array.size(); j++) {
+            for (int j = i + 1; j < inputArray.size(); j++) {
                 if (array.get(j) < array.get(minIndex)) {
                     minIndex = j;
                 }
             }
-            int temp = array.get(minIndex);
-            array.set(minIndex, array.get(i));
-            array.set(i, temp);
-            stringBuilder.append(Arrays.toString(new List[]{array})).append("\n");
+            int temp = inputArray.get(minIndex);
+            inputArray.set(minIndex, inputArray.get(i));
+            inputArray.set(i, temp);
+            stringBuilder.append(Arrays.toString(new List[]{inputArray})).append("\n");
         }
         outputTextArea.appendText(stringBuilder.toString());
-        return array;
+        return inputArray;
     }
 
     @Override

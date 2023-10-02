@@ -44,24 +44,24 @@ public class Lab2Executor extends ArrayLabExecutor<String> {
     }
 
     @Override
-    protected List<String> sortList() {
+    protected List<String> sortList(List<String> inputArray) {
         StringBuilder stringBuilder = new StringBuilder();
-        int arraySize = array.size();
+        int arraySize = inputArray.size();
         for (int gap = arraySize / 2; gap > 0; gap /= 2) {
             // Проходимось по елементам масиву
             for (int i = gap; i < arraySize; i++) {
-                String currentElement = array.get(i);
+                String currentElement = inputArray.get(i);
                 int j;
                 // Порівнюємо елементи на відстані gap та переміщуємо їх, якщо потрібно
-                for (j = i; j >= gap && array.get(j - gap).compareTo(currentElement) > 0; j -= gap) {
-                    array.set(j, array.get(j - gap));
+                for (j = i; j >= gap && inputArray.get(j - gap).compareTo(currentElement) > 0; j -= gap) {
+                    inputArray.set(j, inputArray.get(j - gap));
                 }
-                array.set(j, currentElement);
+                inputArray.set(j, currentElement);
             }
-            stringBuilder.append(Arrays.toString(new List[]{array})).append("\n");
+            stringBuilder.append(Arrays.toString(new List[]{inputArray})).append("\n");
         }
         outputTextArea.appendText(stringBuilder.toString());
-        return array;
+        return inputArray;
     }
 
     @Override

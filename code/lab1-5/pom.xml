@@ -95,6 +95,16 @@
             <version>1.18.30</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.commonjava.ssl</groupId>
+            <artifactId>ssl-tools</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.commonjava.ssl</groupId>
+            <artifactId>ssl-tools</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

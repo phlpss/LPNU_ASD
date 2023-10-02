@@ -1,5 +1,6 @@
 package com.example.lab_ads.executors;
 
+import com.example.lab_ads.RowWrapper;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 import lombok.AccessLevel;
@@ -36,6 +37,11 @@ public class Lab3Executor {
      */
     public void doThingsWithArray(int size) {
         matrix = generateMatrix(size);
+
+        List<RowWrapper> sums = matrix.stream()
+                .map(Lab3Executor::getRowWrapper)
+                .toList();
+
         printMatrix(matrix, originalArrayText, "Original Matrix:\n");
 
         // sort matrix, display operations and traces the execution time of the method
@@ -56,9 +62,15 @@ public class Lab3Executor {
         matrix.clear();
     }
 
+    private static RowWrapper getRowWrapper(List<Double> row) {
+        double rowSum = row.stream().mapToDouble(el -> el).sum();
+        return new RowWrapper(rowSum, row);
+    }
+
     protected List<List<Double>> generateMatrix(int size) {
         Random random = new Random();
-        double randomValue, roundedValue;
+        double randomValue;
+        double roundedValue;
 
         for (int i = 0; i < size; i++) {
             // generate each of row

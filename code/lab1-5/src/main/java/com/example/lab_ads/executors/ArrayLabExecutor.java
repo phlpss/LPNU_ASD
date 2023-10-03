@@ -29,7 +29,7 @@ public abstract class ArrayLabExecutor<T> {
         originalArrayText.setText("Original:\t\t" + Arrays.toString((new List[]{list})));
 
         List<T> updatedArray = updateList();
-        updatedArrayText.setText("Updated:\t" + Arrays.toString(new List[]{updatedArray}));
+        updatedArrayText.setText("Updated:\t\t" + Arrays.toString(new List[]{updatedArray}));
 
         long start = System.currentTimeMillis();
         List<T> sortedArray = sortList(list);

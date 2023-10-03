@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Lab2Executor extends ArrayLabExecutor<String> {
-    private static List<String> cities = List.of(
+    private static final List<String> cities = List.of(
             "Kyiv", "Lviv", "Oslo", "Trondheim", "Bergen", "Drammen", "New York",
             "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Antonio", "San Diego",
             "Dallas", "San Jose", "Kristiansand", "Bodo", "Mysen", "Bryne", "London", "Paris", "Berlin",
@@ -19,7 +19,7 @@ public class Lab2Executor extends ArrayLabExecutor<String> {
             "Delhi", "Cairo", "Cape Town", "Nairobi", "Lima", "Buenos Aires", "Rio de Janeiro", "Sao Paulo",
             "Bogota", "Caracas", "Mexico City"
     );
-    private static List<String> array = new ArrayList<String>();
+    private static final List<String> array = new ArrayList<>();
 
     public Lab2Executor(Text originalArrayText, Text updatedArrayText, Text sortedArrayText, Text timeElapsedText, Text isSortedArrayText, TextArea outputTextArea) {
         super(originalArrayText, updatedArrayText, sortedArrayText, timeElapsedText, isSortedArrayText, outputTextArea);
@@ -65,7 +65,7 @@ public class Lab2Executor extends ArrayLabExecutor<String> {
     }
 
     @Override
-    protected boolean isSorted(List<String> array) {
+    protected boolean isSorted(List<String> inputArray) {
         for (int i = 1; i < array.size(); i++) {
             if (array.get(i).compareTo(array.get(i - 1)) < 0) {
                 return false;

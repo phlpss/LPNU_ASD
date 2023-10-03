@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Lab1Executor extends ArrayLabExecutor<Integer>{
-    private static List<Integer> array = new ArrayList<Integer>();
+    private static final List<Integer> array = new ArrayList<>();
     public Lab1Executor(Text originalArrayText, Text updatedArrayText, Text sortedArrayText, Text timeElapsedText, Text isSortedArrayText, TextArea outputTextArea) {
         super(originalArrayText, updatedArrayText, sortedArrayText, timeElapsedText, isSortedArrayText, outputTextArea);
     }
@@ -59,7 +59,7 @@ public class Lab1Executor extends ArrayLabExecutor<Integer>{
     }
 
     @Override
-    protected boolean isSorted(List<Integer> array) {
+    protected boolean isSorted(List<Integer> inputArray) {
         for (int i = 1; i < array.size(); i++) {
             if (array.get(i) < array.get(i - 1)) {
                 return false;

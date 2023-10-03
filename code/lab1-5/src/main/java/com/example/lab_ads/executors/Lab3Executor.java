@@ -1,73 +1,59 @@
 package com.example.lab_ads.executors;
 
-import com.example.lab_ads.RowWrapper;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-/**
- * A class for performing operations on matrices and displaying results.
- */
-@RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PROTECTED)
-public class Lab3Executor {
-    Text originalArrayText;
-    Text updatedArrayText;
-    Text sortedArrayText;
-    Text isSortedArrayText;
-    Text timeElapsedText;
-    TextArea outputTextArea;
+public class Lab3Executor extends ArrayLabExecutor<Lab3Executor.RowWrapper> {
+    public Lab3Executor(Text originalArrayText,
+                        Text updatedArrayText,
+                        Text sortedArrayText,
+                        Text isSortedArrayText,
+                        Text timeElapsedText, TextArea outputTextArea) {
+        super(originalArrayText, updatedArrayText, sortedArrayText, isSortedArrayText, timeElapsedText, outputTextArea);
+    }
 
-    @NonFinal
-    List<List<Double>> matrix = new ArrayList<>();
     private static final DecimalFormat df = new DecimalFormat("#.##");
+    List<List<Double>> matrix = new ArrayList<>();
+    List<RowWrapper> sums;
 
-    /**
-     * Generate a random matrix of the given size and perform sorting and display operations.
-     *
-     * @param size The size of the matrix.
-     */
+    @Override
     public void doThingsWithArray(int size) {
-        matrix = generateMatrix(size);
+        sums = generateList(size);
 
-        List<RowWrapper> sums = matrix.stream()
-                .map(Lab3Executor::getRowWrapper)
-                .toList();
+        StringBuilder stringBuilderSums = new StringBuilder();
+        for (RowWrapper rowWrapper : sums) {
+            stringBuilderSums.append(rowWrapper);
+        }
+        originalArrayText.setText("Original:\t\t" + stringBuilderSums);
 
-        printMatrix(matrix, originalArrayText, "Original Matrix:\n");
-
-        // sort matrix, display operations and traces the execution time of the method
         long start = System.currentTimeMillis();
-        List<List<Double>> sortedMatrix = sortMatrix(matrix);
+        List<RowWrapper> sortedArray = sortList(sums);
         long end = System.currentTimeMillis();
 
-        // display message if the matrix sorted correctly
-        if (isSorted(matrix)) {
+        if (isSorted(sortedArray)) {
             isSortedArrayText.setText(sortedArrayText.getText() + "\n\nCorrectly Sorted :)");
         } else {
             isSortedArrayText.setText(sortedArrayText.getText() + "\n\nIncorrectly Sorted :(");
         }
 
-        printMatrix(sortedMatrix, sortedArrayText, "Sorted Matrix:\n");
-
+        StringBuilder stringBuilderSorted = new StringBuilder();
+        for (RowWrapper rowWrapper : sortedArray) {
+            stringBuilderSorted.append(rowWrapper);
+        }
+        sortedArrayText.setText("Sorted:\t\t" + stringBuilderSorted);
         timeElapsedText.setText("Sort executed in " + (end - start) + " milliseconds");
-        matrix.clear();
+        list.clear();
     }
 
-    private static RowWrapper getRowWrapper(List<Double> row) {
-        double rowSum = row.stream().mapToDouble(el -> el).sum();
-        return new RowWrapper(rowSum, row);
-    }
-
-    protected List<List<Double>> generateMatrix(int size) {
+    @Override
+    protected List<RowWrapper> generateList(int size) {
         Random random = new Random();
         double randomValue;
         double roundedValue;
@@ -83,96 +69,91 @@ public class Lab3Executor {
             matrix.add(row);
         }
 
-        return matrix;
+        return matrix.stream()
+                .map(Lab3Executor::getRowWrapper)
+                .toList();
     }
 
-    protected Double calculateSumOfRow(List<Double> row) {
-        Double sum = 0.0;
-        for (Double i : row) {
-            sum += i;
-        }
-        return Double.parseDouble(df.format(sum));
+    @Override
+    protected List<RowWrapper> updateList() {
+        return null;
     }
 
-    protected List<List<Double>> sortMatrix(List<List<Double>> inputMatrix) {
-        // if there are only one row in matrix then stop recursion
-        if (inputMatrix.size() <= 1) {
-            return inputMatrix;
+    @Override
+    protected List<RowWrapper> sortList(List<RowWrapper> inputArray) {
+        if (inputArray.size() <= 1) {
+            return inputArray;
         }
 
-        // chose a row from matrix as the pivot (the first for example)
-        List<Double> pivot = new ArrayList<>(inputMatrix.get(0));
-        Double pivotSum = calculateSumOfRow(pivot);
+        Double pivot = inputArray.get(0).getSum();
 
-        // create three parts of the matrix: sum of elements in row < pivot
-        //                                   sum of elements in row == pivot
-        //                                   sum of elements in row > pivot
-        List<List<Double>> less = new ArrayList<>();
-        List<List<Double>> equals = new ArrayList<>();
-        List<List<Double>> greater = new ArrayList<>();
+        // create three parts of the array:
+        List<RowWrapper> less = new ArrayList<>();      // element < pivot
+        List<RowWrapper> equals = new ArrayList<>();    // element == pivot
+        List<RowWrapper> greater = new ArrayList<>();   // element > pivot
 
-        // calculate sum of elements in each of row and put row in correct place
-        for (List<Double> row : inputMatrix) {
-            if (calculateSumOfRow(row) < pivotSum) {
-                less.add(row);
-            } else if (calculateSumOfRow(row) > pivotSum) {
-                greater.add(row);
+        // get sum of elements in each of row and put row in correct place
+        for (RowWrapper rowWrapper : inputArray) {
+            if (rowWrapper.getSum() < pivot) {
+                less.add(rowWrapper);
+            } else if (rowWrapper.getSum() > pivot) {
+                greater.add(rowWrapper);
             } else {
-                equals.add(row);
+                equals.add(rowWrapper);
             }
         }
 
         // sort each of the partition recursively and add it to sorted matrix
-        List<List<Double>> sortedMatrix = new ArrayList<>();
-        sortedMatrix.addAll(sortMatrix(less));
-        sortedMatrix.addAll(equals);
-        sortedMatrix.addAll(sortMatrix(greater));
+        List<RowWrapper> sortedList = new ArrayList<>();
+        sortedList.addAll(sortList(less));
+        sortedList.addAll(equals);
+        sortedList.addAll(sortList(greater));
 
         // Update the TextArea with the current state of the sorted matrix
-        updateOutputTextArea(sortedMatrix);
-        return sortedMatrix;
+        updateOutputTextArea(sortedList);
+
+        return sortedList;
     }
 
-    private void updateOutputTextArea(List<List<Double>> inputMatrix) {
-        // Clear the existing content in the TextArea
-        StringBuilder outputText = new StringBuilder();
-
-        for (List<Double> row : inputMatrix) {
-            outputText.append("| ");
-            for (Double value : row) {
-//                outputText.append(String.format("%.2f", value));
-                outputText.append(value);
-                outputText.append("    ");
-            }
-            outputText.append("\n");
-        }
-        outputText.append("\n");
-        outputTextArea.appendText(outputText.toString());
-    }
-
-    protected boolean isSorted(List<List<Double>> inputMatrix) {
-        Double first;
-        for (List<Double> row : inputMatrix) {
-            first = calculateSumOfRow(row);
-            if (calculateSumOfRow(row) < first) {
+    @Override
+    protected boolean isSorted(List<RowWrapper> inputArray) {
+        for (int i = 1; i < inputArray.size() - 1; i++) {
+            if (inputArray.get(i).getSum() < inputArray.get(i - 1).getSum()) {
                 return false;
             }
         }
         return true;
     }
 
-    protected void printMatrix(List<List<Double>> inputMatrix, Text text, String title) {
-        StringBuilder matrixText = new StringBuilder(title);
-
-        for (List<Double> row : inputMatrix) {
-            matrixText.append("| ");
-            for (Double value : row) {
-                matrixText.append(value).append("    ");
-            }
-            matrixText.append("\t= ").append(calculateSumOfRow(row)).append("\n");
-        }
-
-        text.setText(matrixText.toString());
+    private static RowWrapper getRowWrapper(List<Double> row) {
+        double rowSum = row.stream().mapToDouble(el -> el).sum();
+        return new RowWrapper(rowSum, row);
     }
 
+    private void updateOutputTextArea(List<RowWrapper> inputMatrix) {
+        // Clear the existing content in the TextArea
+        StringBuilder outputText = new StringBuilder();
+        for (RowWrapper row : inputMatrix) {
+            outputText.append(row.toString());
+        }
+        outputText.append("\n");
+        outputTextArea.appendText(outputText.toString());
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class RowWrapper {
+        private Double sum;
+        private List<Double> values;
+
+        @Override
+        public String toString() {
+            StringBuilder stringBuilder = new StringBuilder("\n");
+            for (Double value : values) {
+                stringBuilder.append(df.format(value)).append("  ");
+            }
+            stringBuilder.append("\t= ").append(Double.parseDouble(df.format(sum)));
+            return stringBuilder.toString();
+        }
+    }
 }

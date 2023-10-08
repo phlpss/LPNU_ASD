@@ -22,7 +22,7 @@ public class Lab4Executor extends ArrayLabExecutor<Double> {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             // Generate random values between -100 and 100
-            double randomValue = (random.nextDouble() * 200) - 100;
+            double randomValue = (random.nextDouble() * 20) - 10;
 
             // Round the randomValue to 2 decimals
             double roundedValue = Double.parseDouble(df.format(randomValue));

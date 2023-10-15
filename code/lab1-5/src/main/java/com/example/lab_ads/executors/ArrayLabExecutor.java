@@ -32,7 +32,7 @@ public abstract class ArrayLabExecutor<T> {
         updatedArrayText.setText("Updated:\t\t" + Arrays.toString(new List[]{updatedArray}));
 
         long start = System.currentTimeMillis();
-        List<T> sortedArray = sortList(list);
+        List<T> sortedArray = sortList(updatedArray);
         long end = System.currentTimeMillis();
 
         if (isSorted(sortedArray)) {

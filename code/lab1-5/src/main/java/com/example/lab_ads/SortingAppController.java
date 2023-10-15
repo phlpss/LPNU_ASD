@@ -85,7 +85,8 @@ public class SortingAppController {
                 break;
             case "lab 5":
                 clearText();
-                originalArrayText.setText("Lab 5 haven`t created yet :(");
+                ArrayLabExecutor<Double> executor5 = new Lab5Executor(originalArrayText, updatedArrayText, sortedArrayText, timeElapsedText, isSortedArrayText, outputTextArea);
+                executor5.doThingsWithArray(arraySize);
                 break;
         }
     }

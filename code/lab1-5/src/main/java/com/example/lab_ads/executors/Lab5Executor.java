@@ -8,7 +8,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
 
-
+// todo: if -0.0 -> 0.0
 public class Lab5Executor extends ArrayLabExecutor<Double> {
     public Lab5Executor(Text originalArrayText, Text updatedArrayText, Text sortedArrayText, Text isSortedArrayText, Text timeElapsedText, TextArea outputTextArea) {
         super(originalArrayText, updatedArrayText, sortedArrayText, isSortedArrayText, timeElapsedText, outputTextArea);
@@ -52,17 +52,16 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
         BigDecimal minElem = minValue(originalArray);
         BigDecimal maxElem = maxValue(originalArray);
 
-        // 2: Init a countOccurrences of length max
-        // 3: count the occurrences of each element and put it into the countArray as values
+        // 2: count the occurrences of each element and put it into the countArray as values
         List<Integer> countOccurences = countOccurrences(minElem, maxElem);
 
-        // 4: update the countArray by adding previous element to current
+        // 3: update the countArray by adding previous element to current
         countOccurences = updateCounts(countOccurences);
 
-        // 5: shift elements in countArray to the right
+        // 4: shift elements in countArray to the right
         countOccurences = shiftCounts(countOccurences);
 
-        // 6: put elements in correct place
+        // 5: put elements in correct places
         originalArray = countSorted(originalArray, countOccurences, minElem);
 
         return originalArray;
@@ -77,6 +76,7 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
         }
         return true;
     }
+
 
     protected BigDecimal calculateValue(List<Double> inputArray, boolean isMax) {
         if (inputArray.isEmpty()) {
@@ -116,6 +116,7 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
             result.add(count);
         }
 
+        outputTextArea.appendText("1. Count occurrences:\t" + result + "\n");
         return result;
     }
 
@@ -128,6 +129,8 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
             int value = inputArray.get(i) + result.get(i - 1);
             result.add(value);
         }
+
+        outputTextArea.appendText("2. Updated by adding:\t" + result + "\n");
         return result;
     }
 
@@ -139,6 +142,7 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
         }
         result.set(0, 0);
 
+        outputTextArea.appendText("3. Shifted array:\t\t" + result + "\n");
         return result;
     }
 
@@ -153,6 +157,7 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
             int increment = countOccurrences.get(index) + 1;
             countOccurrences.set(index, increment);
         }
+        outputTextArea.appendText("\nSorted array:\t" + result + "\n");
         return result;
     }
 }

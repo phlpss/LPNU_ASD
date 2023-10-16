@@ -4,10 +4,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.text.Text;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.Map;
-import java.util.Map.Entry;
 
 
 public class Lab5Executor extends ArrayLabExecutor<Double> {
@@ -22,8 +21,8 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
     protected List<Double> generateList(int size) {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
-            // Generate random values between -8 and 8
-            double randomValue = (random.nextDouble() * 4) - 2;
+            // Generate random values between -4 and 4
+            double randomValue = (random.nextDouble() * 8) - 4;
 
             // Round the randomValue to 2 decimals
             double roundedValue = Double.parseDouble(df.format(randomValue));
@@ -35,16 +34,12 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
 
     @Override
     protected List<Double> updateList() {
-        // if (elem%2 ==  0) then (tan(elem) - elem)
-        // else (|elem|)
         for (int i = 0; i < array.size(); i++) {
             Double currentElem = array.get(i);
-            if (currentElem % 2 == 0) {
-                Double newValue = Double.parseDouble(df.format(Math.tan(currentElem) - currentElem));
-                array.set(i, newValue);
+            if (i % 2 == 0) {
+                array.set(i, Double.parseDouble(df.format(Math.tan(currentElem) - currentElem)));
             } else {
-                Double newValue = Double.parseDouble(df.format(Math.abs(currentElem)));
-                array.set(i, newValue);
+                array.set(i, Double.parseDouble(df.format(Math.abs(currentElem))));
             }
         }
         return array;
@@ -52,150 +47,114 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
 
 
     @Override
-    protected List<Double> sortList(List<Double> inputArray) {
-        // 1: find max elem in array
-        int maxElem = maxValue(inputArray);
+    protected List<Double> sortList(List<Double> originalArray) {
+        // 1: find left and right bound of array
+        BigDecimal minElem = minValue(originalArray);
+        BigDecimal maxElem = maxValue(originalArray);
 
-        // 2: Init a countHashMap of length max+1 with
-        //                                             keys = [0, max]
-        //                                             values = [0 -> then counts]
+        // 2: Init a countOccurrences of length max
         // 3: count the occurrences of each element and put it into the countArray as values
-        Map<Double, Integer> countHashMap = countOccurences(maxElem);
+        List<Integer> countOccurences = countOccurrences(minElem, maxElem);
 
         // 4: update the countArray by adding previous element to current
-        countHashMap = updateCounts(countHashMap);
+        countOccurences = updateCounts(countOccurences);
 
         // 5: shift elements in countArray to the right
-        countHashMap = shiftCounts(countHashMap);
+        countOccurences = shiftCounts(countOccurences);
 
         // 6: put elements in correct place
-        inputArray = countSorted(inputArray, countHashMap);
+        originalArray = countSorted(originalArray, countOccurences, minElem);
 
-        return inputArray;
+        return originalArray;
     }
 
     @Override
     protected boolean isSorted(List<Double> inputArray) {
         for (int i = 1; i < inputArray.size(); i++) {
-            if (inputArray.get(i - 1) < inputArray.get(i)) {
+            if (inputArray.get(i - 1) > inputArray.get(i)) {
                 return false;
             }
         }
         return true;
     }
 
-    protected int maxValue(List<Double> inputArray) {
+    protected BigDecimal calculateValue(List<Double> inputArray, boolean isMax) {
         if (inputArray.isEmpty()) {
             throw new IllegalArgumentException("The inputArray is empty.");
         }
-        Double maxValue = inputArray.get(0);
-        for (int i = 0; i < inputArray.size(); i++) {
-            if (inputArray.get(i) > maxValue) {
-                maxValue = inputArray.get(i);
+        BigDecimal result = BigDecimal.valueOf(inputArray.get(0));
+
+        for (int i = 1; i < inputArray.size(); i++) {
+            double currentValue = inputArray.get(i);
+            if ((isMax && currentValue > result.doubleValue()) || (!isMax && currentValue < result.doubleValue())) {
+                result = new BigDecimal(currentValue);
             }
         }
-        return (int) Math.ceil(maxValue);
+
+        return result.setScale(2, RoundingMode.HALF_UP);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(array, df);
+    public BigDecimal maxValue(List<Double> inputArray) {
+        return calculateValue(inputArray, true);
     }
 
-    protected Map<Double, Integer> countOccurences(int size) {
-        LinkedHashMap<Double, Integer> result = new LinkedHashMap<>(size);
+    public BigDecimal minValue(List<Double> inputArray) {
+        return calculateValue(inputArray, false);
+    }
 
-        // Iterate over list [0.0, max]
-        BigDecimal i = BigDecimal.ZERO;
-        BigDecimal step = BigDecimal.valueOf(0.1);
+    protected List<Integer> countOccurrences(BigDecimal sizeOfMin, BigDecimal sizeOfMax) {
+        List<Integer> result = new ArrayList<>();
+        BigDecimal step = new BigDecimal("0.1");
 
-        while (i.compareTo(BigDecimal.valueOf(size)) <= 0) {
+        for (BigDecimal i = sizeOfMin; i.compareTo(sizeOfMax) <= 0; i = i.add(step)) {
             int count = 0;
-            // Iterate over the original array to count occurrences
-            for (Double element : array) {
-                BigDecimal elementBigDecimal = BigDecimal.valueOf(element);
-                if (i.compareTo(elementBigDecimal) == 0) {
+            for (double value : array) {
+                if (value == i.doubleValue()) {
                     count++;
                 }
             }
-            result.put(i.doubleValue(), count);
-            i = i.add(step);
+            result.add(count);
         }
 
         return result;
     }
 
-    protected Map<Double, Integer> updateCounts(Map<Double, Integer> inputArray) {
-        Map<Double, Integer> updatedMap = new LinkedHashMap<>();
+    protected List<Integer> updateCounts(List<Integer> inputArray) {
+        List<Integer> result = new ArrayList<>(inputArray.size());
 
-        // Init a variable to keep track of the previous value
-        Integer previousValue = null;
+        result.add(inputArray.get(0));
 
-        // Iterate through the input map
-        for (Entry<Double, Integer> entry : inputArray.entrySet()) {
-            Double key = entry.getKey();
-            Integer value = entry.getValue();
-
-            // If this is not the first entry, add the previous value to the current one
-            if (previousValue != null) {
-                value += previousValue;
-            }
-
-            // Put the updated key-value pair in the new map
-            updatedMap.put(key, value);
-
-            // Update the previousValue for the next iteration
-            previousValue = value;
-        }
-
-        return updatedMap;
-    }
-
-    protected Map<Double, Integer> shiftCounts(Map<Double, Integer> inputArray) {
-        Map<Double, Integer> updatedMap = new LinkedHashMap<>();
-
-        ListIterator<Integer> iterator = new ArrayList<>(inputArray.values()).listIterator(inputArray.size());
-
-        int previousValue = 0;
-
-        while (iterator.hasPrevious()) {
-            int currentValue = iterator.previous();
-            updatedMap.put((Double) inputArray.entrySet().toArray(new Entry[0])[iterator.nextIndex()].getKey(), previousValue);
-            previousValue = currentValue;
-        }
-
-        return updatedMap;
-    }
-
-    protected List<Double> countSorted(List<Double> inputArray, Map<Double, Integer> inputCountHashMap) {
-        List<Double> result = new ArrayList<>(inputArray.size());
-
-        for (double currentElement : inputArray) {
-            int indexOfCurrentElementInHashMap = findKeyIndexInMap(currentElement, inputCountHashMap);
-            if (indexOfCurrentElementInHashMap >= 0) {
-                result.add(indexOfCurrentElementInHashMap, currentElement);
-            } else {
-                result.remove(currentElement);
-            }
+        for (int i = 1; i < inputArray.size(); i++) {
+            int value = inputArray.get(i) + result.get(i - 1);
+            result.add(value);
         }
         return result;
     }
 
-    protected int findKeyIndexInMap(double key, Map<Double, Integer> inputCountHashMap) {
-        int index = -1;
-        int currentIndex = 0;
+    protected List<Integer> shiftCounts(List<Integer> inputArray) {
+        List<Integer> result = new ArrayList<>(List.copyOf(inputArray));
 
-        for (Map.Entry<Double, Integer> entry : inputCountHashMap.entrySet()) {
-            if (entry.getKey().equals(key)) {
-                index = currentIndex;
-                break;
-            }
-            currentIndex++;
+        for (int i = result.size() - 1; i > 0; i--) {
+            result.set(i, inputArray.get(i - 1));
         }
+        result.set(0, 0);
 
-        return index;
+        return result;
     }
 
+    protected List<Double> countSorted(List<Double> originalArray, List<Integer> countOccurrences, BigDecimal shift) {
+        List<Double> result = new ArrayList<>(originalArray);
+
+        for (Double aDouble : originalArray) {
+            int index = (int) ((BigDecimal.valueOf(aDouble).subtract(shift).multiply(BigDecimal.TEN)).doubleValue());
+
+            result.set(countOccurrences.get(index), aDouble);
+
+            int increment = countOccurrences.get(index) + 1;
+            countOccurrences.set(index, increment);
+        }
+        return result;
+    }
 }
 
 

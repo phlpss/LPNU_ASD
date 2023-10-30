@@ -22,29 +22,6 @@ public class Lab6Executor {
     }
 
     public void doThingsWithArray(int size) {
-        List<Integer> list1 = generateList(size);
-        List<Integer> list2 = new ArrayList<>(list1);
-        List<Integer> list3 = new ArrayList<>(list1);
-        List<Integer> list4 = new ArrayList<>(list1);
-        List<Integer> list5 = new ArrayList<>(list1);
-
-        long selectionSort = measureTime(() -> selectionSort(list1));
-        long shellSort = measureTime(() -> shellSort(list2));
-        long quickSort = measureTime(() -> quickSort(list3));
-        long mergeSort = measureTime(() -> mergeSort(list4));
-        long countSort = measureTime(() -> countSort(list5));
-
-        outputTextArea.appendText("Selection Sort:\t\t" + selectionSort + " milliseconds\n");
-        outputTextArea.appendText("Shell Sort:\t\t" + shellSort + " milliseconds\n");
-        outputTextArea.appendText("Quick Sort:\t\t" + quickSort + " milliseconds\n");
-        outputTextArea.appendText("Merge Sort:\t\t" + mergeSort + " milliseconds\n");
-        outputTextArea.appendText("Count Sort:\t\t" + countSort + " milliseconds\n");
-
-        String winner = calculateTheFastestAlgorithm(selectionSort, shellSort, quickSort, mergeSort, countSort);
-        winnerText.setText("\nThe winner: " + winner + "\n");
-    }
-
-    public void doThingsWithArray_v2(int size) {
         List<Integer> list = generateList(size);
 
         long executionTimeSelectionSort = doAlgorithmSteps(this::selectionSort,"Selection Sort",list);

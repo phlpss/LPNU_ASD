@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class Lab6Executor {
@@ -41,6 +42,28 @@ public class Lab6Executor {
 
         String winner = calculateTheFastestAlgorithm(selectionSort, shellSort, quickSort, mergeSort, countSort);
         winnerText.setText("\nThe winner: " + winner + "\n");
+    }
+
+    public void doThingsWithArray_v2(int size) {
+        List<Integer> list = generateList(size);
+
+        long executionTimeSelectionSort = doAlgorithmSteps(this::selectionSort,"Selection Sort",list);
+        long executionTimeShellSort = doAlgorithmSteps(this::shellSort,"Shell Sort",list);
+        long executionTimeQuickSort = doAlgorithmSteps(this::quickSort,"Quick Sort",list);
+        long executionTimeMergeSort = doAlgorithmSteps(this::mergeSort,"Merge Sort",list);
+        long executionTimeCountSort = doAlgorithmSteps(this::countSort,"Count Sort",list);
+
+        String winner = calculateTheFastestAlgorithm(executionTimeSelectionSort, executionTimeShellSort,
+                                                     executionTimeQuickSort, executionTimeMergeSort, executionTimeCountSort);
+        winnerText.setText("\nThe winner: " + winner + "\n");
+    }
+
+
+    private long doAlgorithmSteps(Consumer<List<Integer>> sorter, String message, List<Integer> inputList){
+        List<Integer> list1 = new ArrayList<>(inputList);
+        long executionTime = measureTime(() ->sorter.accept(list1));
+        outputTextArea.appendText(message+":\t\t" + executionTime + " milliseconds\n");
+        return executionTime;
     }
 
     private long measureTime(Runnable sortFunction) {

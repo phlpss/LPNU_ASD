@@ -53,16 +53,17 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
         BigDecimal maxElem = maxValue(originalArray);
 
         // 2: count the occurrences of each element and put it into the countArray as values
-        List<Integer> countOccurences = countOccurrences(minElem, maxElem);
+        List<Integer> countOccurrences = countOccurrences(minElem, maxElem);
 
         // 3: update the countArray by adding previous element to current
-        countOccurences = updateCounts(countOccurences);
+        countOccurrences = updateCounts(countOccurrences);
 
         // 4: shift elements in countArray to the right
-        countOccurences = shiftCounts(countOccurences);
+        countOccurrences = shiftCounts(countOccurrences);
 
         // 5: put elements in correct places
-        originalArray = countSorted(originalArray, countOccurences, minElem);
+        outputTextArea.appendText("\nSorted array:\n");
+        originalArray = countSorted(originalArray, countOccurrences, minElem);
 
         return originalArray;
     }
@@ -147,17 +148,18 @@ public class Lab5Executor extends ArrayLabExecutor<Double> {
     }
 
     protected List<Double> countSorted(List<Double> originalArray, List<Integer> countOccurrences, BigDecimal shift) {
-        List<Double> result = new ArrayList<>(originalArray);
+        int size = originalArray.size();
+        List<Double> result = new ArrayList<>(Collections.nCopies(size, 0.0));
 
         for (Double aDouble : originalArray) {
             int index = (int) ((BigDecimal.valueOf(aDouble).subtract(shift).multiply(BigDecimal.TEN)).doubleValue());
 
             result.set(countOccurrences.get(index), aDouble);
+            outputTextArea.appendText(result + "\n");
 
             int increment = countOccurrences.get(index) + 1;
             countOccurrences.set(index, increment);
         }
-        outputTextArea.appendText("\nSorted array:\t" + result + "\n");
         return result;
     }
 }

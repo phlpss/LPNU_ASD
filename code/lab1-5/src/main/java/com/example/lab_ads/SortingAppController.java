@@ -32,7 +32,7 @@ public class SortingAppController {
     private int arraySize = 0;
 
     public void initialize() {
-        String[] algorithms = {"lab 1: Selection Sort", "lab 2: Shell Sort", "lab 3: Quicksort", "lab 4: Merge Sort", "lab 5: Counting Sort"};
+        String[] algorithms = {"lab 1: Selection Sort", "lab 2: Shell Sort", "lab 3: Quicksort", "lab 4: Merge Sort", "lab 5: Counting Sort", "lab 6: The Winner"};
         choiceBox.getItems().addAll(algorithms);
         choiceBox.setValue(algorithms[0]);
 
@@ -87,6 +87,11 @@ public class SortingAppController {
                 clearText();
                 ArrayLabExecutor<Double> executor5 = new Lab5Executor(originalArrayText, updatedArrayText, sortedArrayText, timeElapsedText, isSortedArrayText, outputTextArea);
                 executor5.doThingsWithArray(arraySize);
+                break;
+            case "lab 6: The Winner":
+                clearText();
+                Lab6Executor executor6 = new Lab6Executor(outputTextArea, originalArrayText);
+                executor6.doThingsWithArray(arraySize);
                 break;
         }
     }

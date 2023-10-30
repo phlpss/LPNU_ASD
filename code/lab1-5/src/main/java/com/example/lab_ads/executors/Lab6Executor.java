@@ -5,6 +5,10 @@ import javafx.scene.text.Text;
 
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.IntStream;
 
 public class Lab6Executor {
@@ -39,11 +43,20 @@ public class Lab6Executor {
         winnerText.setText("\nThe winner: " + winner + "\n");
     }
 
-    private long measureTime(Runnable action) {
-        long start = System.currentTimeMillis();
-        action.run();
-        long end = System.currentTimeMillis();
-        return end - start;
+    private long measureTime(Runnable sortFunction) {
+        CompletableFuture<Void> future = CompletableFuture.runAsync(sortFunction);
+        long startTime = System.currentTimeMillis();
+        try {
+            future.get(5, TimeUnit.MINUTES);
+        } catch (InterruptedException | ExecutionException e) {
+            // Handle the exception - maybe another kind of sorting error occurred
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            outputTextArea.appendText("Error: Sorting took more than 5 minutes\n");
+            return -1; // Indicate an error with a special value, or you can throw an exception.
+        }
+        long endTime = System.currentTimeMillis();
+        return endTime - startTime;
     }
 
     protected List<Integer> generateList(int size) {

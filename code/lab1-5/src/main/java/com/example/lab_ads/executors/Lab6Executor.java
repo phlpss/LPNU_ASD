@@ -24,22 +24,22 @@ public class Lab6Executor {
     public void doThingsWithArray(int size) {
         List<Integer> list = generateList(size);
 
-        long executionTimeSelectionSort = doAlgorithmSteps(this::selectionSort,"Selection Sort",list);
-        long executionTimeShellSort = doAlgorithmSteps(this::shellSort,"Shell Sort",list);
-        long executionTimeQuickSort = doAlgorithmSteps(this::quickSort,"Quick Sort",list);
-        long executionTimeMergeSort = doAlgorithmSteps(this::mergeSort,"Merge Sort",list);
-        long executionTimeCountSort = doAlgorithmSteps(this::countSort,"Count Sort",list);
+        long executionTimeSelectionSort = doAlgorithmSteps(this::selectionSort, "Selection Sort", list);
+        long executionTimeShellSort = doAlgorithmSteps(this::shellSort, "Shell Sort", list);
+        long executionTimeQuickSort = doAlgorithmSteps(this::quickSort, "Quick Sort", list);
+        long executionTimeMergeSort = doAlgorithmSteps(this::mergeSort, "Merge Sort", list);
+        long executionTimeCountSort = doAlgorithmSteps(this::countSort, "Count Sort", list);
 
         String winner = calculateTheFastestAlgorithm(executionTimeSelectionSort, executionTimeShellSort,
-                                                     executionTimeQuickSort, executionTimeMergeSort, executionTimeCountSort);
+                executionTimeQuickSort, executionTimeMergeSort, executionTimeCountSort);
         winnerText.setText("\nThe winner: " + winner + "\n");
     }
 
 
-    private long doAlgorithmSteps(Consumer<List<Integer>> sorter, String message, List<Integer> inputList){
+    private long doAlgorithmSteps(Consumer<List<Integer>> sorter, String message, List<Integer> inputList) {
         List<Integer> list1 = new ArrayList<>(inputList);
-        long executionTime = measureTime(() ->sorter.accept(list1));
-        outputTextArea.appendText(message+":\t\t" + executionTime + " milliseconds\n");
+        long executionTime = measureTime(() -> sorter.accept(list1));
+        outputTextArea.appendText(message + ":\t\t" + executionTime + " milliseconds\n");
         return executionTime;
     }
 
@@ -63,7 +63,7 @@ public class Lab6Executor {
         Random random = new Random();
         List<Integer> array = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            array.add(i, random.nextInt(1000) + 1);
+            array.add(i, random.nextInt(1000000) + 1);
         }
         return array;
     }
@@ -217,11 +217,21 @@ public class Lab6Executor {
     protected String calculateTheFastestAlgorithm(long selectionSort, long shellSort, long quickSort,
                                                   long mergeSort, long countSort) {
         Map<String, Long> algorithmTimes = new LinkedHashMap<>();
-        algorithmTimes.put("Selection Sort", selectionSort);
-        algorithmTimes.put("Shell Sort", shellSort);
-        algorithmTimes.put("Quick Sort", quickSort);
-        algorithmTimes.put("Merge Sort", mergeSort);
-        algorithmTimes.put("Count Sort", countSort);
+        if (selectionSort > 0) {
+            algorithmTimes.put("Selection Sort", selectionSort);
+        }
+        if (shellSort > 0){
+            algorithmTimes.put("Shell Sort", shellSort);
+        }
+        if (quickSort > 0){
+            algorithmTimes.put("Quick Sort", quickSort);
+        }
+        if (mergeSort > 0){
+            algorithmTimes.put("Merge Sort", mergeSort);
+        }
+        if (countSort > 0){
+            algorithmTimes.put("Count Sort", countSort);
+        }
 
         return Collections.min(algorithmTimes.entrySet(), Map.Entry.comparingByValue()).getKey();
     }

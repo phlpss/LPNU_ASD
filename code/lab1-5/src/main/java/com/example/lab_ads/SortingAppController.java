@@ -89,7 +89,6 @@ public class SortingAppController {
                 executor5.doThingsWithArray(arraySize);
                 break;
             case "lab 6: The Winner":
-                clearText();
                 Lab6Executor executor6 = new Lab6Executor(outputTextArea, originalArrayText);
                 executor6.doThingsWithArray(arraySize);
                 break;
@@ -106,6 +105,6 @@ public class SortingAppController {
     }
 
     private boolean isArraySizeValid(int arraySize) {
-        return arraySize > 0 && arraySize < 1000000;
+        return arraySize > 0;
     }
 }
